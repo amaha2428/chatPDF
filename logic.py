@@ -1,7 +1,7 @@
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -51,7 +51,8 @@ def user_question(vectorstore, user_input):
     """Generate an answer to the user's question."""
     try:
         retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
-        docs = retriever.get_relevant_documents(user_input)
+        # docs = retriever.get_relevant_documents(user_input)
+        docs = retriever.invoke(user_input)
 
         # Extract context from retrieved documents
         context = "\n".join([doc.page_content for doc in docs])
